@@ -33,33 +33,4 @@ eqn.~\ref{eqn::nl_model}, we have the control form of the model:
     J \dot \omega + b_m \omega + C_D \omega^2 + M_f \delta v = V_{in}^2 (1 + \delta v) C_D u
 \end{equation}
 
-We have the following bounds on the control input:
-\begin{align*}
-    u &= u_\omega^2 = \lr{a u_p + b}^2\\
-    \implies u_{min} &= \lr{a u_{p_{min}}  + b}^2 = \lr{0.0696 \times 1110 - 64.3266}^2 = 167.1694\\
-    \implies u_{max} &= \lr{a u_{p_{max}}  + b}^2 = \lr{0.0696 \times 1890 - 64.3266}^2 = 4518.1789\\
-\end{align*}
-
-The goal of feedback control design for the actuator is two-fold:
-\begin{enumerate}
-\item Compensate for the input-uncertainities, un-modelled disturbances and
-model-structure errors.
-\item Make the actuator track the response of a second-order transfer function
-with no over-shoot of the form:
-\begin{align*}
-    G_{ref}(s) &= \frac{1}{s^2 + 2 \zeta \omega_{ref} + \omega_{ref}^2}
-    && \zeta = \frac{1}{\sqrt{2}} = 0.707
-\end{align*}
-Such that, $\omega_{ref}$ results in the maximum possible bandwidth in presence
-of uncertainties mentioned above.
-\end{enumerate}
-
-To this end, two feedback control designs based on Adaptive Robust Control
-Theory (ARC) are implemented, and their performances are compared:
-\begin{enumerate}
-    \item Direct/Indirect Adaptive Robust Controller (DIARC).
-    \item ARC design with parameter estimation only for the disturbances(Disturbance ARC).
-    \item Feedback linearization.
-\end{enumerate}
-
 %===============================================================================

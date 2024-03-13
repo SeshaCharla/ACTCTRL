@@ -1,0 +1,25 @@
+\subsection{Model Parameter Estimates}
+The model parameters and their variances are estimated using a combination of static experimental data and dynamic responses obtained under small-perturbation conditions. Subsequently, the resulting model is validated against the dynamic response of the full nonlinear model.
+%===
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c l l c}
+        \hline \hline
+        Parameter & Value & Units & Variance ($\sigma$)            \\ \hline \hline
+        $C_T$ & $7.2581 \times 10^{-06}$ & $N/(rad/s)^2$   & $4.4522 \times 10^{-8}$ \\
+        $C_D$ & $3.6088 \times 10^{-08}$ & $N.m/(rad/s)^2$ & $1.3964 \times 10^{-9}$ \\
+        $b_m$ & $0.0$                    & $N.m/(rad/s)$   & $4.6003 \times 10^{-6}$  \\
+        $M_f$ & $1.3135 \times 10^{-3}$  & $N.m$           & $4.5277 \times 10^{-3}$ \\
+        $J$   & $3.2238 \times 10^{-6}$   & $Kg.m^2$        & $7.0053 \times 10^{-6}$ \\
+        \hline \hline
+    \end{tabular}
+    \caption{Summary of parameter estimates from static and small-perturbation experiments}
+    \label{tab::parm_ests}
+\end{table}
+
+Further the bounds on the voltage variation based on the hard cut-off of the ESC
+are found to be:
+%===
+\begin{align}
+\abs{\delta v}_{max} = 0.2
+\end{align}

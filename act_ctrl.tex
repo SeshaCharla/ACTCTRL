@@ -40,10 +40,11 @@
 \newcommand{\mdet}[1]{\norm{\begin{matrix} #1 \end{matrix}}}
 \newcommand{\lr}[1]{\left( #1 \right)}
 \newcommand{\sat}{\,\text{sat}}
+\newcommand{\figsize}{0.5\textwidth}
 
 
 
-\title{Identification and Control of Multirotor Actuator Dynamics with RPM feedback}
+\title{Improving the dynamic response of the multi-rotor actuator through RPM feedback: Modelling and Control}
 \author{Sesha Charla}
 \date{\today}
 
@@ -53,21 +54,27 @@
 \tableofcontents
 \newpage
 \
+%===
+\newpage
+\input{secs/1-intro.tex}
 % ==============================================================================
+\newpage
+\input{secs/2-dyn_mdl.tex}
+%===
 \newpage
 \input{secs/1-control_model.tex}
 %===============================================================================
-\newpage
-\input{secs/2_DigitalTwin.tex}
+%\newpage
+%\input{secs/2_DigitalTwin.tex}
 %===============================================================================
-\newpage
-\input{secs/3_TrejOpt.tex}
-%===============================================================================
-\newpage
-\section{Direct Adaptive Robust Control Design (DARC)}
-\input{secs/6_0-ARC_design.tex}
-
-%===============================================================================
+% \newpage
+% \input{secs/3_TrejOpt.tex}
+% %===============================================================================
+% \newpage
+% \section{Direct Adaptive Robust Control Design (DARC)}
+% \input{secs/6_0-ARC_design.tex}
+%
+% %===============================================================================
 \newpage
 \bibliographystyle{unsrt}
 \bibliography{refs}
