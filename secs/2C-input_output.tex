@@ -1,9 +1,10 @@
-\subsection{Input-Output Model}
+\subsection{Input-Output Model for Identification}
 Incorporating the input definition (\ref{eqn::input_def}) into the BLDC motor model with the propeller (\ref{eqn:dyn_mdl}), we have:
 %===
 {\small
 \begin{align}
     &J \dot \omega + b_m \omega + C_D \omega^2 + M_f \lr{1 - \frac{V_{in}}{\hat V_{in}}} = V_{in} b_m u_\omega + V_{in} \hat V_{in} C_D u_\omega^2
+    \label{eqn::calib_mdl}
 \end{align}
 }
 %===

@@ -1,4 +1,4 @@
-\section{Dynamic Model}
+\section{Dynamic model}
 \input{secs/2A-ESC_input.tex}
 
 We have speed-torque characteristics of a BLDC motor \cite{crowder2019electric}:
@@ -22,7 +22,7 @@ Let, $K_r = \frac{K_T}{R}$.
 From (\ref{eqn::esc_input}), we have the electromagnetic torque as a function
 of input and rpm:
 \begin{align}\label{eqn::Te}
-    T_e &= u K_r V_{in} - K_r K_v \omega
+    T_e &= u_m K_r V_{in} - K_r K_v \omega
 \end{align}
 %===
 We use the following quadratic relationship between propeller aerodynamic forces
@@ -43,7 +43,7 @@ We have the dynamic model of the BLDC motor with propeller using moment balance:
 \end{align}
 Where, $J$ is the moment of inertia. Also, let $b_m = b_f + K_rK_v$. We have the dynamic model:
 \begin{equation}\label{eqn:dyn_mdl}
-    J\dot \omega + b_m \omega + C_D \omega^2 + M_f = u K_r V_{in}
+    J\dot \omega + b_m \omega + C_D \omega^2 + M_f = u_m K_r V_{in}
 \end{equation}
 %===
 \input{secs/2B-norm_omega.tex}
@@ -52,4 +52,4 @@ Where, $J$ is the moment of inertia. Also, let $b_m = b_f + K_rK_v$. We have the
 %===
 \input{secs/2D-ident.tex}
 %===
-\input{secs/2E-act_limits.tex}
+\input{secs/2E-CtrlForm.tex}

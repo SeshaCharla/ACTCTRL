@@ -23,3 +23,19 @@ are found to be:
 \begin{align}
 \abs{\delta v}_{max} = 0.2
 \end{align}
+
+Further, from the experiments the system start only at $u_\omega = 12.93$ which
+is the minimum input required to overcome the static friction. This can be
+verified as:
+\begin{align}
+     \lr{V_{in}^2  C_D u_\omega^2 }_{\lr{u_\omega = 12.93, V_{in} = 15.54}} = 1.4570 =  M_f
+\end{align}
+
+Thus, expanding the range of $u_w$ from $[12.93, 67.23]$ to $[0, 67.23]$, the
+dynamic model \ref{eqn::nl_model} will now include the actual friction instead
+of $\delta v M_f$. Rewriting \ref{eqn::calib_mdl}:
+
+\begin{align}
+    &J \dot \omega + b_m \omega + C_D \omega^2 + M_f = V_{in} \lr{b_m u_\omega + \hat V_{in} C_D u_\omega^2}
+    \label{eqn::0_mdl}
+\end{align}
