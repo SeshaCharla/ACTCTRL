@@ -1,0 +1,75 @@
+\section{Actuation limits and the reference system design}
+The actuator has hard limits beyond which the system doesn't function and
+operational limits beyond which the system doesn't produce and useful output.
+These are tabulated in the following:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{r c c c c}
+        \hline \hline
+        Limit & $u_p$ & $u_{\omega}$ & $u_{in} (=u_\omega^2)$ & $\omega$ \\ \hline \hline
+        Actual Lower         & 1110 & 12.93 & 167.17 & 200.92 \\
+        Operational Lower    & 1294 & 25.74 &  662.55 & 400 \\
+        Operational Higher   & 1849 & 64.35 & 4140.92 & 1000\\
+        Actual Higher        & 1890 & 67.23 & 4518.12 &  1044.56\\
+        \hline \hline
+    \end{tabular}
+    \caption{Input and steady state limits of the actuator}
+\end{table}
+
+
+\noindent The goal of feedback control design for the actuator is two-fold:
+\begin{enumerate}
+\item Compensate for the input-uncertainities, un-modelled disturbances and
+model-structure errors.
+\item With in the operational limits, make the actuator track the response of a second-order transfer function
+with no over-shoot of the form:
+\begin{align*}
+    G_{ref}(s) &= \frac{\omega_{r}^2}{s^2 + 2s \zeta \omega_{r} + \omega_{r}^2}
+    && \zeta = \frac{1}{\sqrt{2}} = 0.707
+\end{align*}
+Such that, $\omega_{r}$ results in the maximum possible bandwidth in presence
+of uncertainties mentioned above.
+\end{enumerate}
+
+The above reference system will also introduce a limit on the maximum rate of
+change of angular velocity. We have,
+\begin{align*}
+    &\omega(s) = \frac{\omega_{r}^2}{s^2 + 2 s \zeta \omega_{r} + \omega_{r}^2}\\
+    %===
+    &\text{Let,} \quad \alpha = \frac{d \omega }{dt}
+    \\
+    %===
+    &\implies \alpha(s) = s \omega(s) =  \frac{s\omega_{r}^2}{s^2 + 2 s \zeta \omega_{r} + \omega_{r}^2}
+    \\
+    %===
+    &\implies \norm{\alpha(j\omega)} = \norm{\frac{j \omega \omega_{r}^2}{{j \omega}^2 + 2 j \omega  \zeta \omega_{r} + \omega_{r}^2}}
+    %---
+    = \frac{\omega \omega_r^2}{\norm{-\omega^2 + 2 j \omega  \zeta \omega_{r} + \omega_{r}^2}}
+    %---
+    = \frac{\omega \omega_r^2}{\sqrt{\lr{\omega_r^2 - \omega^2}^2 + 4 \zeta^2 \omega_r^2 \omega^2}}
+    \\
+    %===
+    &\text{as, }\quad \zeta = \frac{1}{\sqrt{2}},
+    \qquad
+    %===
+    \norm{\alpha(j \omega)}^2 = \frac{\omega^2 \omega_r^4}{\omega^4 + \omega_r^4}
+\end{align*}
+Let, $\Omega_r = \omega_r^2$, $\Omega = \omega^2$ and $M(\Omega) =
+\norm{\alpha(j\omega)}^2$.
+Thus, the maximum rate of change happens at:
+\begin{align*}
+    &\frac{d M(\Omega)}{d \Omega} = \frac{d}{d \Omega} \lr{\frac{\Omega \Omega_r^2}{\Omega^2 + \Omega_r^2}} = 0
+    \quad
+    %===
+    \implies \frac{\Omega_r^2 \lr{\Omega^2 + \Omega_r^2} - 2 \Omega \lr{\Omega \Omega_r^2}}{\lr{\Omega^2 + \Omega_r^2}^2} = 0
+    \quad
+    %===
+    \implies \Omega = \Omega_r
+\end{align*}
+Thus,
+\begin{align*}
+    \max \lr{{ \norm{\alpha(j \omega)}^2 }} &= M(\Omega_r) = \frac{\Omega_r^3}{2 \Omega_r^2} = \frac{1}{2} \omega_r^2
+\end{align*}
+\begin{equation}\label{eqn::max_bandwidth}
+    \therefore \; \dot \omega_{max} = \frac{1}{\sqrt{2}} \omega_r
+\end{equation}
