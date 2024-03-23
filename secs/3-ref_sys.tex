@@ -4,27 +4,30 @@ operational limits beyond which the system doesn't produce and useful output.
 These are tabulated in the following:
 \begin{table}[H]
     \centering
-    \begin{tabular}{r c c c c}
+    \begin{tabular}{l r r r r}
         \hline \hline
-        Limit & $u_p$ & $u_{\omega}$ & $u_{in} (=u_\omega^2)$ & $\omega$ \\ \hline \hline
-        Actual Lower         & 1110 & 12.93 & 167.17 & 200.92 \\
-        Operational Lower    & 1294 & 25.74 &  662.55 & 400 \\
-        Operational Higher   & 1849 & 64.35 & 4140.92 & 1000\\
-        Actual Higher        & 1890 & 67.23 & 4518.12 &  1044.56\\
+        Limit & $u_p$ & $u_{\omega}$ & $u$ & $\omega$ \\ \hline \hline
+        Actual Lower         & 924  & 0     & 0        & 0\\
+        Lower Start          & 1110 & 12.93 & 451.95   & 200.92 \\
+        Operational Lower    & 1294 & 25.74 & 1791.08  & 400 \\
+        Operational Higher   & 1849 & 64.35 & 11194.22 & 1000\\
+        Actual Higher        & 1890 & 67.23 & 12218.64 &  1044.56\\
         \hline \hline
     \end{tabular}
     \caption{Input and steady state limits of the actuator}
 \end{table}
 
 
-\noindent The goal of feedback control design for the actuator is two-fold:
+% ==============================================================================
+
+The goal of feedback control design for the actuator is two-fold:
 \begin{enumerate}
 \item Compensate for the input-uncertainities, un-modelled disturbances and
 model-structure errors.
 \item With in the operational limits, make the actuator track the response of a second-order transfer function
 with no over-shoot of the form:
 \begin{align*}
-    G_{ref}(s) &= \frac{\omega_{r}^2}{s^2 + 2s \zeta \omega_{r} + \omega_{r}^2}
+    G_{r}(s) &= \frac{\omega_{r}^2}{s^2 + 2s \zeta \omega_{r} + \omega_{r}^2}
     && \zeta = \frac{1}{\sqrt{2}} = 0.707
 \end{align*}
 Such that, $\omega_{r}$ results in the maximum possible bandwidth in presence
@@ -54,6 +57,8 @@ change of angular velocity. We have,
     %===
     \norm{\alpha(j \omega)}^2 = \frac{\omega^2 \omega_r^4}{\omega^4 + \omega_r^4}
 \end{align*}
+% ==============================================================================
+
 Let, $\Omega_r = \omega_r^2$, $\Omega = \omega^2$ and $M(\Omega) =
 \norm{\alpha(j\omega)}^2$.
 Thus, the maximum rate of change happens at:
@@ -73,3 +78,112 @@ Thus,
 \begin{equation}\label{eqn::max_bandwidth}
     \therefore \; \dot \omega_{max} = \frac{1}{\sqrt{2}} \omega_r
 \end{equation}
+
+% ==============================================================================
+% ==============================================================================
+
+\subsection{Limitations on $\dot \omega$}
+
+The input saturation imposes limitations on the maximum and minimum rate of
+change of the angular velocity $(\omega)$. From the dynamic model (\ref{eqn::ctrl_form}), removing the zero parameters
+$(b_m)$ and uncertainities $(\Delta)$, we have:
+
+\begin{align*}
+    \dot \omega &= -C_{D_J} \omega^2 - M_{f_J} + V_{in} u
+\end{align*}
+
+From the above equation, we have the following bounds on the rate of change of
+$\omega$, with in the operational limits [400 rad/s, 1000 rad/s].
+
+\begin{enumerate}
+    \item Maximum rate of increase:
+    \begin{align*}
+        \dot \omega^{+}_{max} &= -C_{D_J} (\omega_{min})^2 - M_{f_J}+ V_{in} u_{max}\\
+                              &= -C_{D_J} (400)^2 - M_{f_J} + V_{in} (12218.64)
+                               =  189877.66 \; rad/s
+                               = 1.899e5 \; rad/s
+    \end{align*}
+
+    \item Minimum rate of increase:
+    \begin{align*}
+        \dot \omega^{+}_{min} &= -C_{D_J} (\omega_{max})^2 - M_{f_J}+ V_{in} u_{max}\\
+                              &= -C_{D_J} (1000)^2 - M_{f_J} + V_{in} (12218.64)
+                               = 189459.03 \; rad/s = 1.894e5 \; rad/s
+    \end{align*}
+
+    \item Maximum rate of decrease:
+    \begin{align*}
+        \dot \omega^{-}_{max} &= -C_{D_J} \omega_{min}^2 - M_{f_J} + V_{in} u_{min}\\
+                              &= -C_{D_J} 1000^2 - M_{f_J} + V_{in} \times 0
+                               = -418.63 \; rad/s
+    \end{align*}
+
+    \item Minimum rate of decrease:
+    \begin{align*}
+        \dot \omega^{-}_{min} &= -C_{D_J} \omega_{min}^2 - M_{f_J} + V_{in} u_{min}\\
+                              &= -C_{D_J} 400^2 - M_{f_J} + V_{in} \times 0  = -411.91 \; rad/s
+    \end{align*}
+\end{enumerate}
+
+% ==============================================================================
+
+For the motor-propeller system to perfectly track the response of a linear
+second order system within the input constraints, the fastest rate of change of
+reference system state should be less than the minimum rate of decrease in the
+actual system, i.e.,
+
+\begin{align}
+    \abs{\dot \omega_{max}} &\leq \abs{\dot \omega^{-}_{min}} \label{eqn::dot_omega_max}\\
+    \implies \frac{1}{\sqrt{2}} \omega_r &\leq 411.91 \; rad/s
+    [\because \ref{eqn::max_bandwidth}]\\
+    \therefore \omega_r &\leq 582.53
+    \label{eqn::omega_r_lim}
+\end{align}
+
+% ==============================================================================
+% ==============================================================================
+
+\subsection{Sampling Limitations}
+The sampling due to the implimentation of feedback would introduce it's own
+limitations on the maximum bandwidth of the reference system, namely, the
+Nyquist frequency $(n_f)$ of sampling. The approximate inequality would be:
+\begin{align}
+    \omega_r < 2 \pi n_f
+    \label{eqn::wr_lim_nf}
+\end{align}
+
+For the current set-up, $n_f = 250/2 = 125 \; Hz$. Thus,
+\begin{align}
+    \omega_r < 2\pi \times 125 = 785.4 \; rad/s
+\end{align}
+
+The above limit is less restrictive than the limit on the maximum rate of change
+due to the passive dissipative forces on the actuator.
+
+
+\bigskip \itbf{Note:} The above inequality (\ref{eqn::wr_lim_nf}), we can fliped and
+combined with (\ref{eqn::dot_omega_max}) for using it as a design limitation
+for the samplig system. Thus, the minimum sampling the requirement for obtating
+the maximum performace from the system as:
+\begin{align}
+    n_f > \frac{\dot \omega^{-}_{min}}{2 \pi}
+\end{align}
+
+
+% ==============================================================================
+% ==============================================================================
+
+\subsection{Reference system design}
+From the above inequalites on $\omega_r$, (\ref{eqn::wr_lim_nf}),
+(\ref{eqn::omega_r_lim}), a conservative choice or $\omega_r$ is used for the
+reference system design.
+
+\begin{align}
+    \omega_r &= 550 \; rad/s\\
+    \zeta &= \frac{1}{\sqrt{2}}
+\end{align}
+
+Thus,
+\begin{align}
+    G_r (s) &= \frac{302500}{s^2 + 777.82 s + 302500}
+\end{align}
