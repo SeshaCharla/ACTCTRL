@@ -86,7 +86,7 @@ Thus,
 
 The input saturation imposes limitations on the maximum and minimum rate of
 change of the angular velocity $(\omega)$. From the dynamic model (\ref{eqn::ctrl_form}), removing the zero parameters
-$(b_m)$ and uncertainities $(\Delta)$, we have:
+$(b_m)$ and uncertainties $(\Delta)$, we have:
 
 \begin{align*}
     \dot \omega &= -C_{D_J} \omega^2 - M_{f_J} + V_{in} u
@@ -127,10 +127,7 @@ $\omega$, with in the operational limits [400 rad/s, 1000 rad/s].
 
 % ==============================================================================
 
-For the motor-propeller system to perfectly track the response of a linear
-second order system within the input constraints, the fastest rate of change of
-reference system state should be less than the minimum rate of decrease in the
-actual system, i.e.,
+In order for the motor-propeller system to accurately track the response of a linear second-order system within the given input constraints, the maximum rate of change of the reference system state should be lower than the minimum rate of decrease in the actual system. This ensures that the system can keep up with the desired changes in the reference signal.
 
 \begin{align}
     \abs{\dot \omega_{max}} &\leq \abs{\dot \omega^{-}_{min}} \label{eqn::dot_omega_max}\\
@@ -144,7 +141,7 @@ actual system, i.e.,
 % ==============================================================================
 
 \subsection{Sampling Limitations}
-The sampling due to the implimentation of feedback would introduce it's own
+The sampling due to the implementation of feedback would introduce its own
 limitations on the maximum bandwidth of the reference system, namely, the
 Nyquist frequency $(n_f)$ of sampling. The approximate inequality would be:
 \begin{align}
@@ -161,10 +158,11 @@ The above limit is less restrictive than the limit on the maximum rate of change
 due to the passive dissipative forces on the actuator.
 
 
-\bigskip \itbf{Note:} The above inequality (\ref{eqn::wr_lim_nf}), we can fliped and
-combined with (\ref{eqn::dot_omega_max}) for using it as a design limitation
-for the samplig system. Thus, the minimum sampling the requirement for obtating
-the maximum performace from the system as:
+\bigskip \itbf{Note:} The above inequality (\ref{eqn::wr_lim_nf}), can be
+flipped and combined with (\ref{eqn::dot_omega_max}) for using it as a design
+limitation for the sampling system. Thus, the minimum sampling the requirement
+for obtaining the maximum performance from the system as:
+
 \begin{align}
     n_f > \frac{\dot \omega^{-}_{min}}{2 \pi}
 \end{align}
