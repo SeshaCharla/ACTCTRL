@@ -8,10 +8,10 @@ These are tabulated in the following:
         \hline \hline
         Limit & $u_p$ & $u_{\omega}$ & $u$ & $\omega$ \\ \hline \hline
         Actual Lower         & 924  & 0     & 0        & 0\\
-        Lower Start          & 1110 & 12.93 & 451.95   & 200.92 \\
-        Operational Lower    & 1294 & 25.74 & 1791.08  & 400 \\
-        Operational Higher   & 1849 & 64.35 & 11194.22 & 1000\\
-        Actual Higher        & 1890 & 67.23 & 12218.64 &  1044.56\\
+        Lower Start          & 1110 & 12.93 & 29.08    & 200.92 \\
+        Operational Lower    & 1294 & 25.74 & 115.26   & 400 \\
+        Operational Higher   & 1849 & 64.35 & 720.35   & 1000\\
+        Actual Higher        & 1890 & 67.23 & 786.27   &  1044.56\\
         \hline \hline
     \end{tabular}
     \caption{Input and steady state limits of the actuator}
@@ -99,41 +99,41 @@ $\omega$, with in the operational limits [400 rad/s, 1000 rad/s].
     \item Maximum rate of increase:
     \begin{align*}
         \dot \omega^{+}_{max} &= -C_{D_J} (\omega_{min})^2 - M_{f_J}+ V_{in} u_{max}\\
-                              &= -C_{D_J} (400)^2 - M_{f_J} + V_{in} (12218.64)
-                               =  189877.66 \; rad/s
-                               = 1.899e5 \; rad/s
+                              &= -C_{D_J} (400)^2 - M_{f_J} + V_{in} (786.27)
+                               =  10020.12 \; rad/s
     \end{align*}
 
     \item Minimum rate of increase:
     \begin{align*}
         \dot \omega^{+}_{min} &= -C_{D_J} (\omega_{max})^2 - M_{f_J}+ V_{in} u_{max}\\
-                              &= -C_{D_J} (1000)^2 - M_{f_J} + V_{in} (12218.64)
-                               = 189459.03 \; rad/s = 1.894e5 \; rad/s
+                              &= -C_{D_J} (1000)^2 - M_{f_J} + V_{in} (786.27)
+                               = 616.95 \; rad/s
     \end{align*}
 
     \item Maximum rate of decrease:
     \begin{align*}
         \dot \omega^{-}_{max} &= -C_{D_J} \omega_{min}^2 - M_{f_J} + V_{in} u_{min}\\
                               &= -C_{D_J} 1000^2 - M_{f_J} + V_{in} \times 0
-                               = -418.63 \; rad/s
+                               = -11601.68 \; rad/s
     \end{align*}
 
     \item Minimum rate of decrease:
     \begin{align*}
         \dot \omega^{-}_{min} &= -C_{D_J} \omega_{min}^2 - M_{f_J} + V_{in} u_{min}\\
-                              &= -C_{D_J} 400^2 - M_{f_J} + V_{in} \times 0  = -411.91 \; rad/s
+                              &= -C_{D_J} 400^2 - M_{f_J} + V_{in} \times 0
+                               = -2198.51 \; rad/s
     \end{align*}
 \end{enumerate}
 
 % ==============================================================================
 
-In order for the motor-propeller system to accurately track the response of a linear second-order system within the given input constraints, the maximum rate of change of the reference system state should be lower than the minimum rate of decrease in the actual system. This ensures that the system can keep up with the desired changes in the reference signal.
+In order for the motor-propeller system to accurately track the response of a linear second-order system within the given input constraints, the maximum rate of change of the reference system state should be lower than the minimum rate of change in the actual system. This ensures that the system can keep up with the desired changes in the reference signal.
 
 \begin{align}
-    \abs{\dot \omega_{max}} &\leq \abs{\dot \omega^{-}_{min}} \label{eqn::dot_omega_max}\\
-    \implies \frac{1}{\sqrt{2}} \omega_r &\leq 411.91 \; rad/s
-    [\because \ref{eqn::max_bandwidth}]\\
-    \therefore \omega_r &\leq 582.53
+    \abs{\dot \omega_{max}} &\leq \abs{\dot \omega^{+}_{min}} \label{eqn::dot_omega_max}\\
+    \implies \frac{1}{\sqrt{2}} \omega_r &\leq 616.95 \; rad/s
+    \qquad [\because \ref{eqn::max_bandwidth}]\\
+    \therefore \omega_r &\leq  872.5 \; rad/s
     \label{eqn::omega_r_lim}
 \end{align}
 
@@ -164,7 +164,7 @@ limitation for the sampling system. Thus, the minimum sampling the requirement
 for obtaining the maximum performance from the system as:
 
 \begin{align}
-    n_f > \frac{\dot \omega^{-}_{min}}{2 \pi}
+    n_f > \frac{\abs{\dot \omega^{\pm}_{min}}}{2 \pi}
 \end{align}
 
 
@@ -177,11 +177,16 @@ From the above inequalites on $\omega_r$, (\ref{eqn::wr_lim_nf}),
 reference system design.
 
 \begin{align}
-    \omega_r &= 550 \; rad/s\\
+    \omega_r &= 700 \; rad/s\\
     \zeta &= \frac{1}{\sqrt{2}}
 \end{align}
 
 Thus,
 \begin{align}
-    G_r (s) &= \frac{302500}{s^2 + 777.82 s + 302500}
+    G_r (s) &= \frac{\omega_r^2}{s^2 + s \omega_r \sqrt{2}  + \omega_r^2}
 \end{align}
+
+% ==============================================================================
+% ==============================================================================
+
+\subsection{Discrete implementation of the reference system}
