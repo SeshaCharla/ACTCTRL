@@ -1,26 +1,28 @@
 \subsection{Control form and parameter bounds for the model}
 
-We have the control form of the model \ref{eqn::ctrl_form}
-\begin{align*}
-    \dot x &= -C_{D_J} x^2 -b_{m_J} x - M_{f_J} + V_{in} u + \Delta(t, x, u)
-\end{align*}
+Rewriting the (\ref{eqn::ctrl_form}) with the following definitions:
 \begin{align}
-    \text{Let, }\quad \Delta(t, x, u) &= d_0 + d(t, x, u) \\
+    \text{Let, }\quad &\Delta(t, x, u) = d_0 + d(t, x, u) \\
     %===
-    \therefore \dot x &= \underbrace{-C_{D_J} x^2 -b_{m_J} x - M_{f_J} + d_0}_{f(t, x)} + V_{in} u + d(t, x, u) \label{eqn::prm_ctrl_form}
+    \therefore \dot x &= -C_{D_J} x^2 -b_{m_J} x - M_{f_J} + d_0 + V_{in} u + d(t, x, u) \\
+    %===
+    \text{Let, } \quad & \theta_1 = C_{D_J} \quad \theta_2 = b_{m_J} \quad \theta_3 = M_{f_J} - d_0  \quad \text{and} \quad b = V_{in}\\
+    %===
+    \text{Thus, }\quad & \dot x = \underbrace{-\theta_1 x^2 -\theta_2 x - \theta_3}_{f(t, x)} + b u + d(t, x, u)
+    \label{eqn::prm_ctrl_form}
 \end{align}
 
 Defining the following regression and parameter vectors:
 \begin{align}
     \phi(x) &= \bm{ -x^2 & -x & -1}^T \\
     %===
-    \theta &= \bm{C_{D_J} & b_{m_J} & M_{f_J}-d_0}^T \\
+    \theta &= \bm{\theta_1 & \theta_2 & \theta_3}^T = \bm{C_{D_J} & b_{m_J} & M_{f_J}-d_0}^T \\
     %===
     \text{Thus, }\quad f(t, x) &= \phi(x)^T \theta\\
     %===
     \phi_u(x, u) &= \bm{\phi(x)^T & u}^T \\
     %===
-    \theta_u &= \bm{\theta^T & V_{in}}^T
+    \theta_b &= \bm{\theta^T & b}^T
 \end{align}
 
 From experimental observations \ref{tab::parm_ests}, the $2\sigma$ variation of
@@ -28,13 +30,11 @@ the parameters is about $10\%$ variation of the parameters. This is used to
 compute the parameter bounds. The physics dictates that
 all the physical parameters have a non-negative value. The bounds on input
 uncertainties are calculated based on the maximum and minimum values of the
-parameters. From (\ref{eqn::ctrl_u}):
+parameter estimates at the calibration time (same as at realtime). From (\ref{eqn::ctrl_u}):
 \begin{align*}
-    u &= \hat b_{m_J} u_\omega + \hat V_{in} \hat C_{D_J} u_\omega^2\\
+    \abs{\Delta}_{max} &\leq \tilde \theta_{2M} \abs{u_\omega}_{max} + \lr{\tilde b_M \abs{\theta_1}_{max} + \abs{b}_{max} \tilde \theta_{1M}}\abs{u_\omega}_{max}^2  < 350 = d_M\\
     %===
-    \implies \abs{\Delta}_{max} &\leq \tilde b_{m_J} \abs{u_\omega}_{max} + \lr{\tilde V_{in} \abs{C_{D_J}}_{max} + \abs{V_{in}}_{max} \tilde C_{D_J}}\abs{u_\omega}_{max}^2  < 350 = d_M\\
-    %===
-    \text{where, }\quad \tilde \bullet &= \abs{\bullet_{max} - \bullet_{min}}\\
+    \text{where, }\quad \tilde \bullet_M &= \abs{\bullet_{max} - \bullet_{min}}\\
     %===
     \implies \abs{d_0} &\leq d_M = 350 \\
     \implies \abs{d(t)} &\leq 2 d_M = 700
@@ -49,25 +49,25 @@ The following table gives the minimum, maximum and nominal values of the paramet
     \begin{tabular}{r r r r}
         \hline \hline
         Parameter &Nominal & Minimum & Maximum \\ \hline \hline
-        $C_{D_J}$ $\lr{\theta_1}$&
+        $\theta_1$            &
         $0.0112$              &
         $0.0101$              &
         $0.0123$
 
         \\
-        $b_{m_J}$ $\lr{\theta_2}$&
+        $\theta_2$               &
         $0$                      &
         $0$                      &
         $1$
         \\
-        $M_{f_J} - d_0$ $\lr{\theta_3}$ &
+        $\theta_3$                 &
         $407.44$                   &
-        $0$                             &
+        $0$                        &
         $750$
         \\
-        $V_{in}$ $\lr{\theta_{u_4}}$ &
-        $15.54$                     &
-        $14.5$                      &
+        $b$                        &
+        $15.54$                    &
+        $14.5$                     &
         $16.5$
         \\
         $d(t)$                   &
