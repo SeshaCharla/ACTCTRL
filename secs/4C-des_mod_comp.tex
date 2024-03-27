@@ -1,1 +1,38 @@
 \subsection{Desired model compensation input}
+The role of model compensation is to generate the required input for the
+nonminal plant state $(x)$ to track the desired trajectory $(x_d)$.
+
+Let,
+\begin{align}
+    z &= x - x_d\\
+    \implies \dot z &= \dot x - \dot x_d\\
+    \implies \dot z &= \phi^T \theta +  bu + d - \dot x_d \qquad \lrb{\because \ref{eqn::prm_ctrl_form}}
+    \label{eqn::error_dyn}
+\end{align}
+
+Considering only the nominal dynamics, i.e., assuming zero uncertainties ($d = 0$), the error dynamics can be simplified as follows:
+
+\begin{align}
+    \dot z &= \phi^T \theta + bu - \dot x_d
+    \label{eqn::nom_error_dyn}
+\end{align}
+
+The total control input $u$ can be decomposed into $u_m$ (model compensation input) and $u_s$ (robust control input).
+
+\begin{align}
+    u &= u_m + u_s
+\end{align}
+
+The model compensation input in the present case is derived solely from the
+reference trajectory dynamics and the model parameters. We have,
+\begin{align}
+    u_m &= \frac{1}{\hat b} \lr{\dot x_d - \phi^T(x_d) \hat \theta}
+         = \frac{1}{\hat b} \lr{\dot x_d - \phi^T_d \hat \theta}
+         \qquad \lrb{\text{where, } \phi_d  = \phi(x_d)}
+\end{align}
+
+Substituting the above expression for $u_m$ in the nominal error dynamics (\ref{eqn::nom_error_dyn}), we get:
+
+\begin{align}
+    \dot z &= \phi^T \theta + b \lr{u_s + \frac{1}{\hat b} \lr{\dot x_d - \phi^T_d \hat \theta}} - \dot x_d\\
+\end{align}
