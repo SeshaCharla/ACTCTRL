@@ -3,8 +3,7 @@
 Adding model uncertainties to the error dynamics
 (\ref{eqn::error_dyn_model_comp}), we get:
 \begin{align}
-    \dot z &= - \tilde \phi_d^T \theta - \phi_d^T \tilde \theta_b - \dot x_d \tilde b_{\delta} + b u_s + d
-    \label{eqn::error_dyn_model_comp_unc}
+    \dot z &= \tilde \phi^T \theta - \phi^T_d \tilde \theta + bu_s - \tilde b u_m  + d\label{eqn::error_dyn_model_comp_unc}
 \end{align}
 
 The robust feedback control input $u_s$ is further decomposed into two parts:
@@ -17,8 +16,7 @@ Substituting above expression for $u_s$ in the error dynamics
 (\ref{eqn::error_dyn_model_comp_unc}), we get:
 
 \begin{align}
-    \dot z + bk z &= bu_{s2} - \lrb{
-        \tilde \phi_d^T \theta + \phi_d^T \tilde \theta_b + \dot x_d \tilde b_{\delta} - d}
+    \dot z + bk z &= bu_{s2} + \tilde \phi^T \theta - \phi^T_d \tilde \theta - \tilde b u_m  + d
     \label{eqn::error_feedback_dyn}
 \end{align}
 
