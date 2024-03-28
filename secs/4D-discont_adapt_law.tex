@@ -1,7 +1,7 @@
 \subsection{Discontinuous projection based adaptation law}
 The parameter estimation error $\tilde \theta_b$ can be reduced to zero asymptotically by using a gradient-based parameter adaptation law. This adaptation law is defined as follows:
 \begin{align}
-    \dot{\hat{\theta_b}} &= Proj_{\hat{\theta_b}}\lr{\Gamma \phi_{du}(t) z} \\
+    \dot{\hat{\theta_b}} &= Proj_{\hat{\theta_b}}\lr{\Gamma \phi_{du}(t) z}
 \end{align}
 Where $\Gamma$ is a positive definite, diagonal adaption rate matrix.
 We define, \itbf{Discontinuous projection mapping} $Proj()$ for a vector as follows:
@@ -38,45 +38,3 @@ The above mapping has the following properties:
 
 %===============================================================================
 %===============================================================================
-
-\subsection{Proof of stability and tracking performance when $d = 0$}
-When $d = 0$ consider the following Lyapunov function:
-\begin{align*}
-    V &= \frac{1}{2} \theta_1 z^2 + \frac{1}{2} \tilde{\theta}_b^T \Gamma^{-1} \tilde{\theta}_b\\
-    %===
-    \dot V &= s \theta_1 + \tilde{\pmb \theta} \Gamma^{-1} \underbrace{\dot{\tilde{\pmb \theta}}}_{=\dot{\hat{\pmb \theta}}}\\
-    %===
-    &= s \lr{ -k_p s + \underbrace{u_{s_2}}_{=0} - \tilde{\pmb \theta} \pmb \phi } + \tilde{\pmb \theta} \Gamma^{-1} Proj_{\hat{\pmb \theta}} \lr{\Gamma \Phi s}\\
-    %===
-    &= -k_p s^2 + \underbrace{\tilde{\pmb \theta}^T \lr{-\pmb \phi s + \Gamma^{-1}Proj_{\hat{\pmb \theta}} \lr{\Gamma \Phi s}}}_{\leq 0} \qquad [P_2]\\
-    %===
-    \implies \dot V \leq -k_p s^2 \leq 0
-\end{align*}
-Thus,
-\begin{itemize}
-    \item $\dot V$ is negative semi-definite.
-    \item $V$ has a lower bound $(\geq 0)$.
-    \item $\dot V$ is uniform continuous $(\ddot V \leq -k_p s \dot s)$.
-    \item $\therefore$ For a bounded $\omega_d$, $s \in L_\infty$, $\tilde{\pmb
-    \theta} \in L_{\infty}$ and $\dot s \in L_\infty$, $\ddot V \in L_\infty$.
-\end{itemize}
-
-Hence, the parameter estimates and tracking errors are bounded and the system is
-stable.
-
-\bigskip
-
-Also, since $V$ is non-decreasing and positive definite,
-\begin{align*}
-    V(0) - V(t) &\leq V(0) \quad
-    \implies -\int_0^t V d \tau \leq V(0)\\
-    \implies \int_0^t k_p s^2 d \tau &\leq V(0)\\
-    \implies \sqrt{\int_0^t \norm{s}^2 d \tau } &\leq \sqrt{\frac{2 V(0)}{k_p}} \leq \infty\\
-    \therefore s &\in L_2
-\end{align*}
-From Barbalat's lemma, we have,
-\begin{align*}
-    \dot V \rightarrow 0 \quad s \rightarrow 0 \quad \text{as} \quad t \rightarrow 0
-\end{align*}
-Thus the parameter estimates are bounded, and the tracking error asymptotically
-goes to zero as  $t \rightarrow 0$.
