@@ -33,6 +33,31 @@ reference trajectory dynamics and the model parameters. We have,
 
 Substituting the above expression for $u_m$ in the nominal error dynamics (\ref{eqn::nom_error_dyn}), we get:
 
+\begin{align*}
+    \dot z &= \phi^T \theta + b \lr{u_s + \frac{1}{\hat b} \lr{\dot x_d - \phi^T_d \hat \theta}} - \dot x_d \\
+    %===
+    &= \lr{\phi^T \theta - \phi_d^T \theta} + \lr{\phi_d \theta - \frac{b}{\hat b} \phi_d^T \hat \theta} + \lr{\frac{b}{\hat b} \dot x_d - \dot x_d} + b u_s\\
+    %===
+\end{align*}
 \begin{align}
-    \dot z &= \phi^T \theta + b \lr{u_s + \frac{1}{\hat b} \lr{\dot x_d - \phi^T_d \hat \theta}} - \dot x_d\\
+    \dot z &= \lr{\phi^T - \phi_d^T} \theta + \phi_d^T \lr{ \theta - \frac{b}{\hat b} \hat \theta} + \dot x_d \lr{\frac{b}{\hat b} - 1} + b u_s
+    \label{eqn::error_dyn_model_comp}
 \end{align}
+
+Considering the first three terms:
+\begin{enumerate}
+    \item[Term 1:]
+        \begin{align}
+            \lr{\phi^T - \phi_d^T} \theta &\leq \delta_\phi (x, t) \abs{z} \qquad \lrb{\because \theta, \phi \text{ are bounded.} }
+        \end{align}
+
+    \item[Term 2:]
+    \begin{align}
+        \phi_d^T \lr{ \theta - \frac{b}{\hat b} \hat \theta} &\leq \abs{\phi_d^T}_{max} \abs{\frac{\hat b_{max} \hat \theta_{max} - \hat b_{min} \hat \theta_{min}}{\hat b_{min} }}
+    \end{align}
+
+    \item[Term 3:]
+    \begin{align}
+        \dot x_d \lr{\frac{b}{\hat b} - 1}  &\leq \abs{\dot x_d}_{max} \abs{\frac{\hat b_{max} - \hat b_{min}}{\hat b_{min}}}
+    \end{align}
+\end{enumerate}

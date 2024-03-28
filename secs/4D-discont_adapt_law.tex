@@ -1,1 +1,32 @@
 \subsection{Discontinuous projection based adaptation law}
+A gradient based parameter adaptation law is used for $\theta$ estimation. The
+adaptation law is given by:
+\begin{align}
+    \dot{\hat{\theta}} &= Proj_{\hat{\theta}}\lr{\Gamma \phi(x) z} \\
+\end{align}
+Where $\Gamma$ is a positive definite, diagonal adaption rate matrix.
+We define, \itbf{Discontinuous projection mapping} $Proj()$ for a vector as follows:
+\begin{align}
+    Proj_{\hat{\theta}} (\bullet) &= \bm{Proj_{\hat \theta_1}(\bullet_1), &
+                                        Proj_{\hat \theta_2}(\bullet_2), &
+                                        \hdots, &
+                                        Proj_{\hat \theta_n}(\bullet_n)}\\
+    Proj_{\hat \theta_i}(\bullet_i)
+    &= \begin{cases}
+        0 & \text{if } \begin{cases}
+                        \hat \theta_i &= \hat \theta_{i_{min}} \text{  and  } \bullet_i < 0\\
+                        \hat \theta_i &= \hat \theta_{i_{max}} \text{  and  } \bullet_i > 0\\
+                       \end{cases}\\
+        \bullet_i & \text{otherwise}
+    \end{cases}
+\end{align}
+The above mapping has the following properties:
+\begin{itemize}
+    \item[$P_1$:] $\quad \hat{\pmb \theta} \in \bar \Omega_{\theta}=\{\hat{\pmb \theta} : \theta_{i_{min}} \leq \hat \theta_i \leq \theta_{i_{max}} \; \forall i\} \; \forall t$
+
+    \item[$P_2$:] $\quad \tilde{\pmb{\theta}} \left[ \Gamma^{-1}
+    Proj_{\hat{\pmb\theta}} \lr{\Gamma \pmb \phi s} - \phi s \right] \leq 0 \:
+    \forall t \qquad [\tilde{\pmb{\theta}} = \hat{\pmb\theta} - \pmb \theta]$
+\end{itemize}
+
+%===============================================================================
