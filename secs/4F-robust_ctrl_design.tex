@@ -6,20 +6,6 @@ Adding model uncertainties to the error dynamics
     \dot z &= \tilde \phi^T \theta - \phi^T_d \tilde \theta + bu_s - \tilde b u_m  + d\label{eqn::error_dyn_model_comp_unc}
 \end{align}
 
-The robust feedback control input $u_s$ is further decomposed into two parts:
-\begin{align}
-    u_s &= u_{s1} + u_{s2}\\
-    u_{s1} &= - k z
-\end{align}
-
-Substituting above expression for $u_s$ in the error dynamics
-(\ref{eqn::error_dyn_model_comp_unc}), we get:
-
-\begin{align}
-    \dot z + bk z &= bu_{s2} + \tilde \phi^T \theta - \phi^T_d \tilde \theta - \tilde b u_m  + d
-    \label{eqn::error_feedback_dyn}
-\end{align}
-
 The left side of (\ref{eqn::error_feedback_dyn}) represents the stable nominal
 closed-loop dynamics. The terms in the brackets of the right hand side
 represents the effect of all model uncertainties. Though these terms are

@@ -1,6 +1,6 @@
 \subsection{Desired model compensation input}
 The role of model compensation is to generate the required input for the
-nonminal plant state $(x)$ to track the desired trajectory $(x_d)$.
+nominal plant state $(x)$ to track the desired trajectory $(x_d)$.
 
 Let,
 \begin{align}
@@ -54,11 +54,51 @@ It can be noted that as $\theta$ is unknown with known bounds, there exists a
 known function $\delta_\phi(x, t)$ such that:
 \begin{align}
     \abs{\tilde \phi^T \theta} &\leq \delta_\phi(x, t) \abs{z}
+    \label{eqn::tl_phi_bound}
 \end{align}
 
 
 Further, let:
 \begin{align}
     \phi_{du}^T &= \bm{\phi_d^T & u_m}\\
-    \theta_{b} &= \bm{\theta^T & b}
+    \theta_{b} &= \bm{\theta^T & b} \qquad \implies \tilde \theta_b = \bm{\tilde \theta^T & \tilde b}
+\end{align}
+
+Substituting the above definitions in (\ref{eqn::error_dyn_model_comp}), we get:
+\begin{align}
+    \dot z &= \tilde \phi^T \theta - \phi_{du}^T \tilde \theta_b + bu_s
+    \label{eqn::error_dyn_model_comp_2}
+\end{align}
+
+The robust feedback control input $u_s$ is further decomposed into two parts:
+\begin{align}
+    u_s &= u_{s1} + u_{s2}\\
+    u_{s1} &= - k z
+\end{align}
+
+Substituting above expression for $u_s$ in the error dynamics
+(\ref{eqn::error_dyn_model_comp_2}), we get:
+
+\begin{align}
+    \dot z + bk z &= \tilde \phi^T \theta - \phi_{du}^T \tilde \theta_b + bu_{s2}
+    \label{eqn::error_feedback_dyn}
+\end{align}
+
+The robust feedback control input $u_{s2}$ is designed to account for the model
+structure and input uncertainties (d) which are assumed to be zero in this
+design. Thus analyzing the error dynamics (\ref{eqn::error_feedback_dyn}) with
+$u_{s2} = 0$:
+
+\begin{align*}
+    \dot z + bk z &= \tilde \phi^T \theta - \phi_{du}^T \tilde \theta_b
+\end{align*}
+
+If $\tilde \theta_b$ asymptotically becomes zero, then the feedback gain of the
+error dynamics should be large enough to compensate for $\tilde \phi^T \theta$.
+From (\ref{eqn::tl_phi_bound}), we get the following condition for the zero
+tracking error when the parametric uncertainties are zero:
+\begin{align}
+    bkz &\geq \delta_\phi(x, t) \abs{z}\\
+    \implies k &\geq \frac{1}{b}\delta_\phi(x, t) > \frac{1}{\hat b_{min}} \delta_\phi(x, t)
+    \label{eqn::k_bound}
 \end{align}
