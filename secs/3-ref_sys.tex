@@ -190,3 +190,22 @@ Thus,
 % ==============================================================================
 
 \subsection{Discrete implementation of the reference system}
+
+The state space representation of the reference system is:
+\begin{align}
+    \bm{\dot x \\ \ddot x} &= \underbrace{\bm{0 & 1 \\ -\omega_r^2 & -\sqrt{2} \omega_r}}_{A_r} \bm{x \\ \dot x} + \underbrace{\bm{0 \\ 1}}_{B_r} u
+\end{align}
+The discrete implementation of the above system will be of the form:
+\begin{align}
+    \bm{x[k+1] \\ \dot x[k+1]} &= A_d \bm{x[k] \\ \dot x[k]} + B_d u[k]\\
+    %==
+    A_d &= e^{A_r T} =
+    e^{-\alpha T} \bm{\cos \lr{\alpha T} + \sin \lr{\alpha T} & \frac{1}{\alpha}
+                        \sin \lr{\alpha T}\\
+                       -2 \alpha \sin \lr{\alpha T} & \cos \lr{\alpha T} - \sin \lr{\alpha T}}
+    \qquad \lrb{\alpha = \frac{\omega_r}{\sqrt{2}}}\\
+    %===
+    B_d &= \int_0^T e^{A_r \tau} B_r d\tau = \bm{\frac{1}{2 \alpha^2} \lrb{1 - e^{-\alpha T} \lr{\cos \lr{\alpha T} + \sin \lr{\alpha T}}} \\
+    %---
+    \frac{1}{\alpha} e^{-\alpha T} \sin \lr{\alpha T}}
+\end{align}

@@ -1,0 +1,97 @@
+\subsection{Robust feedback control design}
+
+Adding model uncertainties to the error dynamics (\ref{eqn::error_feedback_dyn}):
+\begin{align}
+    \dot z + bk z &=  \tilde \phi^T \theta + bu_{s2} - \lrb{ \phi_{du}^T \tilde \theta_b - d}
+    \label{eqn::error_feedback_dyn_uncertain}
+\end{align}
+
+The left side of (\ref{eqn::error_feedback_dyn_uncertain}) represents the
+stable nominal closed-loop dynamics. The terms in the brackets of the right
+hand side represents the effect of all model uncertainties. Though these terms
+are unknown, but they are bounded above with some known function h(x, t). The
+goal of the robust feedback is to account for the uncertainties during the
+transients and the steady state of parameter adaptation. Thus, $u_{s2}$ is
+synthesized to satisfy the following two conditions:
+\begin{align}
+    C2:& \qquad z \lrb{-\phi_{du}^T \tilde \theta_b + d + b u_{s2}} \leq \varepsilon \\
+    C3:& \qquad z b u_{s2} \leq 0
+\end{align}
+
+%===============================================================================
+
+The function $h(x, t)$ is calculated as follows:
+
+\begin{align}
+    \abs{\phi_{du}^T \tilde \theta_b - d} &\leq h\\
+    \implies h(x_d, t) &= \abs{\phi_{du}^T(x_d, t)}  \tilde \theta_{bM} + 2 d_M \qquad \lrb{\because d \leq 2d_M }
+\end{align}
+
+The robust feedback control input $u_{s2}$ is thus designed to satisfy the conditions $C2$ and $C3$ as follows:
+\begin{align}
+    u_{s_2} &= -\frac{1}{\hat b_{min}} S(h \sign(z)) \label{eqn::robust_u}\\
+    %===
+    \text{Where,  } \qquad
+    S(h \sign(z)) &= h \sat \lr{ \frac{h}{4 \varepsilon} z} &[\text{Smoothing function}]\\
+    %===
+    \sat (x) &= \begin{cases}
+        x  & \text{if  } \abs{x} \leq   1\\
+        \sign(x) &  \text{otherwise}
+    \end{cases}
+\end{align}
+
+The above defined smoothing function, $S(.)$, has the following properties:
+
+\begin{itemize}
+\item[$P_3$:]
+\begin{align}
+    z S(h \sign(z)) = z h \sat \lr{\frac{h}{4 \varepsilon} z} \geq 0
+\end{align}
+$\because$ $z$ and $\sat \lr{\frac{h}{4 \varepsilon} z}$ have the same sign.
+
+\item[$P_4$:]
+\begin{align}
+    z \left[h \sign(z) - S(h\sign(z)) \right] \text{  is bounded.}
+\end{align}
+\itbf{proof:}
+\begin{align*}
+    z \left[h \sign(z) - S(h\sign(z)) \right] &= z \left[h \sign(z) - h \sat \lr{\frac{h}{4 \varepsilon} z} \right]
+\end{align*}
+
+\begin{enumerate}
+\item Outside the boundary layer, i.e., $\lr{\abs{z} > \frac{4 \varepsilon}{h}
+}$:
+\begin{align*}
+    zh \sign(s) - z h \sat \lr{\frac{h}{4 \varepsilon} z} &= h \abs{z} - h\abs{z} = 0
+\end{align*}
+
+\item Inside the boundary layer, i.e., $\lr{\abs{z} < \frac{4 \varepsilon}{h}}$
+\begin{align*}
+    zh \sign(z) - z h \sat \lr{\frac{h}{4 \varepsilon} z} &= h \abs{z} - \frac{h^2}{4 \varepsilon} z^2\\
+    &= \varepsilon - \left[ \frac{1}{2 \sqrt{\varepsilon}} h \abs{z} - \sqrt{\varepsilon} \right]^2\\
+    &\leq \varepsilon\\
+\end{align*}
+\end{enumerate}
+\end{itemize}
+
+The rubust control input definition (\ref{eqn::robust_u}) satisfies the
+conditions $C2$ and $C3$ as following:
+\begin{enumerate}
+    \item[C2:]
+    \begin{align*}
+        z b u_{s2} &= -z \lr{\frac{b}{\hat b_{min}}} S(h \sign(z)) < 0
+        \qquad \lrb{\because \frac{b}{b_{min}} > 1} \\
+    \end{align*}
+As the input gain doesn't change sign, the above inequality is always satisfied.
+
+    \item[C3:]
+    \begin{align*}
+        z \lrb{-\phi_{du}^T \tilde \theta_b + d + b u_{s2}} &= z \lrb{-\phi_{du}^T \tilde \theta_b + d - \delta b S(h \sign(z))} \qquad \lrb{\text{where, } \quad \delta b = \frac{b}{\hat b_{min}} \geq 1 }\\
+        %===
+        &\leq z \lrb{h(x_d, t) - \delta b S(h \sign(z))}\\
+        %===
+        &\leq z \lrb{h(x_d, t) - S(h \sign(z))} \leq \varepsilon
+        \qquad [\because \text{Property } P_4]
+    \end{align*}
+
+\end{enumerate}
