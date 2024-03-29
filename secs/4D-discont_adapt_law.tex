@@ -31,10 +31,18 @@ The above mapping has the following properties:
     \item[$P_2$:]
     \begin{align}
         \tilde{\pmb{\theta}} \left[ \Gamma^{-1} Proj_{\hat{\pmb\theta}}
-        \lr{\Gamma \pmb \phi s} - \phi s \right] \leq 0 \: \forall t \qquad
+        \lr{\Gamma \pmb \phi z} - \phi z \right] \leq 0 \: \forall t \qquad
         [\tilde{\pmb{\theta}} = \hat{\pmb\theta} - \pmb \theta]
     \end{align}
 \end{itemize}
 
+The above adaptation low asymptotically reduces the errors due to parameter
+estimation to zero. This can be proved by adding the following positive
+definite term to the lyapunov function:
+\begin{align*}
+    \tilde \theta_b^T \Gamma^{-1} \tilde \theta_b
+\end{align*}
 %===============================================================================
 %===============================================================================
+
+\input{secs/4D-dzero_stability.tex}
