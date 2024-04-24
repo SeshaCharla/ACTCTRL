@@ -1,55 +1,61 @@
 \section{Introduction}
-\par The modeling of motor-propeller dynamics in the context of multi-rotor
-vehicles takes various forms, including treatment as input uncertainties \cite{liang2021geometric}, linear dynamics \cite{pounds2010modelling}, or stationary mappings \cite{tayebi2006attitude}. However, these models frequently oversimplify the polynomial nonlinearity inherent in actuator dynamics, which includes factors such as friction and aerodynamics.
+Motor-propeller dynamics in multi-rotor vehicles are often oversimplified as
+stationary mapping (\cite{tayebi2006attitude}) or reduced-order linear dynamics
+(\cite{pounds2010modelling}). These models neglect the inherent polynomial
+nonlinearity in actuator dynamics, including friction and aerodynamics. Previous
+studies (\cite{pounds2009design},\cite{pounds2007system},\cite{mahony2012multirotor}) used rotor RPM feedback to enhance system
+dynamics, relying on a second-order model around hover conditions. While
+effective for minor input variations, this approach struggles with substantial
+input changes. The rotational inertia and mass of large propeller blades
+introduce time-scales comparable to overall drone dynamics, crucial for precise
+maneuvers (\cite{hamandi2021design}).
 
-The rotational inertia and the substantial mass of large propeller blades
-introduces time-scales comparable to those of the overall drone dynamics. These
-dynamics play a pivotal role in achieving precise and controllable forces and
-maneuvers \cite{hamandi2021design}. Such precision and control are of
-paramount importance in the emerging field of aerial manipulation, where large
-multi-rotors with diverse configurations are employed \cite{ding2021design},
-\cite{ryll20176d}, \cite{jiang2017estimation}.
+Open-loop control, while simplifying actuator design, has limited bandwidth (Charla et al., 2022) and can amplify uncertainties. Feedback mechanisms, such as monitoring actuator inputs for aerodynamic power (\cite{B_Manony}) or propeller RPM (\cite{franchi2017adaptive}, \cite{bangura2017thrust}), are necessary but can suffer from calibration errors. Commercially available BLDC RPM sensors now enable reliable RPM measurements in medium-sized drones.
 
-While open-loop control simplifies actuator design, it has limited
-effectiveness in increasing bandwidth \cite{charla2022enhancing} and can
-amplify uncertainties. Therefore, feedback mechanisms, such as monitoring
-actuator inputs for calculating aerodynamic power \cite{B_Manony} or propeller
-RPM \cite{franchi2017adaptive}, \cite{bangura2017thrust}, become necessary.
-However, note that the former methods may suffer from calibration errors. The
-proliferation of commercially available BLDC RPM sensors, designed to transmit
-commutation signals, now enables reliable RPM measurements in medium-sized
-drones.
+\cite{franchi2017adaptive} implemented a hybrid controller using RPM feedback to
+linearize actuator dynamics, requiring low-level access to the Electronic Speed
+Controller's (ESC's) microcontroller. A challenge with commercial ESCs is their
+thrust-to-input curve is linearized for intuitive operability, typically
+achieved by introducing nonlinear compensation in the ESC's speed controller and
+the actual PWM input to the inverter controlling the BLDC motor
+(Fig.~\ref{fig::bldc_diag}). This compensation is not explicitly known, making
+it challenging to design a controller that can adapt to the actuator's
+nonlinearities. The present work accounts for this compensation by incorporating
+the static mapping between the PWM input and the steady state RPM of the
+motor-propeller system into the nonlinear dynamic model.
 
-The earlier studies that employed rotor RPM feedback to enhance system
-dynamics, such as
-\cite{pounds2009design},\cite{pounds2007system},\cite{mahony2012multirotor}
-relied on a second-order model around hover conditions. This approach, while
-effective for minor input variations, may not be suitable for accommodating
-substantial input changes. In contrast, \cite{franchi2017adaptive} implemented
-a hybrid controller using RPM feedback to linearize actuator dynamics. However,
-this method necessitates low-level access to the Electronic Speed Controller's
-(ESC's) microcontroller. A notable challenge when using commercial ESCs designed for manual control in autonomous operations
-is their thrust-to-input curve is linearized for intuitive
-operability. Usually, this is achieved by introducing nonlinear compensation in
-the speed controller of the ESC and the actual PWM input to the inverter
-controlling the BLDC motor (Fig.-\ref{fig::bldc_diag}). However, attempting to
-estimate this compensation through system identification techniques proved to
-be unfeasible.
 %===
 \begin{figure}[h]
     \centering
-    \includegraphics[width = 0.45\textwidth]{./figs/figs_acc/schematic/esc_schematic.png}
+    \includegraphics[width = \figsize]{./figs/figs_acc/schematic/esc_schematic.png}
     \caption{Schematic of ESC with BLDC motor}
     \label{fig::bldc_diag}
 \end{figure}
 %===
 
-The present work introduces an adaptable input definition ($u_\omega$) capable of accommodating any nonlinear compensatory mechanisms within the ESC that define ($u_p$). Utilizing this input definition, the nonlinear control model of the system is developed. This model enables the design of improved controllers capable of explicitly mitigating uncertainties, whose bounds are estimated experimentally. Additionally, a novel RPM measurement algorithm with high, variable resolution was discussed, deviating from conventional constant resolution approaches. Furthermore, the paper outlines a system identification procedure linking the linearized model parameters to the parameters of a full nonlinear model.
+The motor-propeller system's function in the present context is to generate the
+desired thrust $T_d$. In general this thrust is quadratic function of the
+angular velocity $\omega$ of the propeller with uncertainties $(T_d = C_T
+\omega_d^2 + \Delta_T)$. Let, $T (=\hat C_T \omega)$ be the thrust that has
+been generated by the controller (main attitude/position control loop of the
+drone) by using this thrust model and open-loop motor commands. The error in
+thrust generation can be expressed as:
+\begin{align*}
+    e_T &= T_d - T = C_T \omega_d^2 - \hat C_T \omega^2 + 2 \Delta_T\\
+        &= C_T (\omega + \omega_d) e_{\omega} + \Delta C_T \omega^2 + 2 \Delta_T
+\end{align*}
+Thus the thrust error $e_T$ is a function of the angular velocity error and the
+uncertainties in the thrust model. Both of these errors cannot be reduced by
+using attitude error feedback with limited excitation persistence. The goal of the present work is to make $e_\omega \rightarrow 0$ asymptotically
+by using the RPM feedback. Such approach is expected to improve the tracking of
+the thrust command ($T_d$) by reducing the thrust error ($e_T$) due to angular
+velocity uncertainties and providing a linear dynamics for the actuator the can
+further be used to design estimators for thrust coefficient ($C_T$)
+from attitude feedback.
 
-The paper is structured into five main sections. Following this introduction,
-Section-2 delves into the discussion of the experimental setup and the
-measurement algorithm. In Section-3, we provide a comprehensive overview of the
-full nonlinear dynamic model, introduce the normalized angular velocity input
-definition, and establish the small perturbation model based on these
-foundations. Section-4 encompasses model parameter identification and validation
-results. Finally, Section-5 offers concluding remarks.
+The proposed approach is based on a nonlinear dynamic model of the
+motor-propeller system, which is identified using RPM feedback. The model is
+then used to design an adaptive robust controller that can asymptotically tracks
+a given reference and estimates the nonlinear model parameters in real-time. As
+the RPM measurement is prone to significant noise, DCARC is used to design the
+controller. The controller is then validated on a test bench.
